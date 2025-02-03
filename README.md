@@ -1,4 +1,4 @@
-![](https://lh6.googleusercontent.com/proxy/Qt_63-Uo_Dt9PdRvq8Z60ju62lrwDAY16kmIDNa2XniSodFLb7o0HydXoZClHe-4vo9ntiSALktuw5EhLXBHI2YKPcypRdpLfGvbifAQfXO3F6aYeMoJU_FhcDtr3GMnkSOsvnwURwTe9YRNNvUX7382gba04mFCYIJ4pg)
+![](https://www.google.com/url?sa=i&url=https%3A%2F%2Fdynamox.net%2Fes%2Fblog%2Fanalisis-espectral-como-aplicarlo-para-analizar-las-vibraciones-en-activos-industriales&psig=AOvVaw0GM8wEJuqe_vMjf02IuSTV&ust=1738677154630000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCOClyqTTp4sDFQAAAAAdAAAAABAd)
 
 
 ## Descripción
