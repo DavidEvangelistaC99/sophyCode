@@ -1884,7 +1884,10 @@ if __name__ == "__main__":
 
 ##Example Final :D
 #python3 thor.py -m 192.168.10.5 -d "A:AB" -c ch0 -y "RX" -f 70.3125e6 -r 20e6 /media/soporte/a9f70b3c-1295-40a4-ae80-96708705fdd0/data    
-#python3 thor.py -m 192.168.10.5 -d "A:AB" -c ch0 -y "RX" -f 70.3125e6 -r 20e6 /home/idi/data
+
+# Usado ahora
+# python3 thorNew.py -m 192.168.10.5 -d "A:AB" -c ch0 -y "RX" -f 70312500 -r 20000000 /home/idi/data
+# python3 thorNew.py -m 192.168.10.5 -d "A:AB" -c ch0 -y "RX" -f 70312500 -r 2500000 /home/idi/data
 
 #/media/idi/965653a2-8544-495c-9791-a89f2032fcb8/sophy
 #/home/idi/data

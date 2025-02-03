@@ -1,25 +1,25 @@
-# ---------------------------------------------------------------------------
+#!python
+# ----------------------------------------------------------------------------
 # Copyright (c) 2017 Massachusetts Institute of Technology (MIT)
 # All rights reserved.
 #
 # Distributed under the terms of the BSD 3-clause license.
 #
 # The full license is in the LICENSE file, distributed with this software.
-# ---------------------------------------------------------------------------
-
+# ----------------------------------------------------------------------------
 """Transmit waveforms with synchronized USRPs."""
 from __future__ import absolute_import, division, print_function
 
-############################## New ##########################################
 
-#from newExperimentM_copia import newExperiment
-from modFreq import chirpStandard, chirpCentral, chirpMod, chirpUsrp
+############################## new ###############################################3
+#from gnuradio.newConfiguration  import newExperiment
+#from gnuradio.newExperiment  import newExperiment
+from NewExperimentM import newExperiment
 import math
 import os
 import re
 import sys
 import time
-import json
 from argparse import (Action, ArgumentParser, Namespace,
                       RawDescriptionHelpFormatter)
 from datetime import datetime, timedelta
@@ -27,14 +27,14 @@ from fractions import Fraction
 from itertools import chain, cycle, islice, repeat
 from subprocess import call
 from textwrap import TextWrapper, dedent, fill
+
 import digital_rf as drf
 import numpy as np
 import pytz
 from gnuradio import analog, blocks, gr, uhd
+
 from six.moves import configparser
 
-# Variables
-# c = 0
 
 def evalint(s):
     """Evaluate string to an integer."""
@@ -176,7 +176,7 @@ def read_timing_mode_waveform(mode_ini, iq_dir=None):
 
     # read sample rate from INI file
     chip_ns = int(cparser.get('mode', 'chip_length'))
-    samplerate_frac = Fraction(1000000000, chip_ns) 
+    samplerate_frac = Fraction(1000000000, chip_ns)
     samplerate = float(samplerate_frac)
 
     # now get list of iq data files from the mode sweep string
@@ -201,34 +201,19 @@ def read_timing_mode_waveform(mode_ini, iq_dir=None):
 
 class Tx(object):
     """Transmit data in binary format from a single USRP. amplitudes 0.25,0.5,1"""
+    ##### la ultima vez que lo use decia 0.8
     def __init__(
-    	self, waveform, amplitudes=[1], phases=[0],
+        self, waveform, amplitudes=[1], phases=[0],
         mboards=[], subdevs=['A:0'],
-        centerfreqs=[0], lo_offsets=[0],
+        centerfreqs=[440e6], lo_offsets=[0],
         lo_sources=[''], lo_exports=[None],
         dc_offsets=[None], iq_balances=[None],
         gains=[0], bandwidths=[0], antennas=[''],
+        samplerate=1e6,
         dev_args=[], stream_args=[], tune_args=[],
-        sync=True, sync_source='external',delay=0,
-        pDCB= 0.0000005,file_code_B=None,
+        sync=True, sync_source='external',ipp_useg=0.0001,delay=0,
+        ntxa=1,ntxb=0,pDCA=0.00001,pDCB= 0.000005,file_code_A=None,file_code_B=None,
         realtime=False, verbose=True, test_settings=True,file=None,
-        
-    	##---Chirp Parameters---##
-    	
-    	samplerate=10000000,
-        ipp_useg=0.0004,
-        pDCA=15,
-        ntxa=1000000,  ##Frecuencia central
-        ntxb=1000000,  ##Sample rate
-        
-        ##########################
-        
-        ##---Chirp Parameters File---##
-
-	file_chirp=None,
-
-        ##########################
-        
     ):
         options = locals()
         del options['self']
@@ -404,11 +389,11 @@ class Tx(object):
         # (integer division of clock rate)
         #cr = u.get_clock_rate()
         ##############################
-        # test_alexander valdez linea 384
+        # test_alexander valdez linea384
         ##############################
-        ##u.set_clock_rate(200e6)
+        #u.set_clock_rate(100e6)
         cr=u.get_clock_rate()
-        ##############################
+        ###############################
         print ("cr get clock_rate", cr)
         srdec = int(round(cr / samplerate))
         print ("srdec",srdec)
@@ -419,11 +404,10 @@ class Tx(object):
         print ("op.samplerate_frac",sr_rat)
         op.samplerate_num = sr_rat.numerator
         op.samplerate_den = sr_rat.denominator
-        
-        #---------------------------NEW PART---------------
+        #--------------------------------NEW PART---------------
 
 
-        #--------------------------------------------------
+        #-------------------------------------------------------
 
         # set per-channel options
         # set command time so settings are synced
@@ -511,7 +495,7 @@ class Tx(object):
             chinfostrs = [
                 'Motherboard: {mb_id} ({mb_addr}) | Daughterboard: {db_name}',
                 'Subdev: {sub} | Antenna: {ant} | Gain: {gain} | Rate: {sr}',
-                'Frequency: {freq:.3f} ({lo_off:+.3f})',
+                'Frequency: {freq:.3f} ({lo_off:+.3f}) | Bandwidth: {bw}',
             ]
             if any(op.lo_sources) or any(op.lo_exports):
                 chinfostrs.append(
@@ -663,44 +647,31 @@ class Tx(object):
 
         # populate flowgraph one channel at a time
         fg = gr.top_block()
-        
         for k in range(op.nchs):
-            samp_rate = op.samplerate
-            f_central = op.centerfreqs
+            mult_k = op.amplitudes[k]*np.exp(1j*op.phases[k])
             IPP = op.ipp_useg
+            NTXA =op.ntxa
+            NTXB =op.ntxb
             DCA = op.pDCA
             DCB = op.pDCB
-            NTXA = op.ntxa ## f_c
-            NTXB = op.ntxb ## s_r
-            file_chirp = op.file_chirp
+            samp_rate= op.samplerate
+            file_code_A = op.file_code_A
             file_code_B = op.file_code_B
             delay = op.delay
-
-            with open(file_chirp,'r') as openfile: #file_chirp: tiene .json
-                #Reading from json file
-                dataC = json.load(openfile)
-
-            ipp_ = dataC['IPP']
-            dc_ = dataC['DC']
-            sr_ = dataC['sr']
-            fc_ = dataC['fc']
-            bw_ = dataC['bw']
-            amp_ = dataC['amp']
-
-            print('Generando señal ...')
-            print("\nChirp Modulation Parameters")
-            print("IPP: ", ipp_, "s")
-            print("DC: ", dc_, "%")
-            print("Sample Rate TX: ", sr_,"Hz")
-            print("Central Freq: ", fc_, "Hz")
-            print("Amplitud: ", amp_)
-            print("Frequencies:")
-            print(round(f_central[0] + fc_ - (bw_/2),3), "-", round(f_central[0] + fc_ + (bw_/2),3), "Hz")
-	    
-	    
+            print("samp_rate",samp_rate)
+            print("IPP",IPP)
+            print("NTXA",NTXA)
+            print("NTXB",NTXB)
+            print("DCA",DCA)
+            print("DCB",DCB)
+            print("file_code_A",file_code_A)
+            print("file_code_B",file_code_B)
+            print("mult_k",mult_k)
+            print('op.waveform',op.waveform)
             if op.waveform is not None:
-                #src_k = blocks.vector_source_c((np.fromfile(file_chirp,dtype=np.complex64)).tolist(), repeat=True,
-                src_k = blocks.vector_source_c(chirpUsrp(amp_,ipp_,dc_,sr_,fc_,bw_), repeat=True,
+                print("TEST_USRP_CODIGO :) HOW MANY TIMES")
+                #waveform_k = mult_k*op.waveform
+                src_k = blocks.vector_source_c(mult_k*newExperiment(IPP,NTXA,NTXB,DCA,DCB,file_code_A,file_code_B,samp_rate,delay), repeat=True,
                 )
             else:
                 src_k = analog.sig_source_c(
@@ -750,8 +721,6 @@ class Tx(object):
         print('done')
         sys.stdout.flush()
 
-
-###------------------------ARGPARSE------------------------###
 
 if __name__ == '__main__':
     scriptname = os.path.basename(sys.argv[0])
@@ -948,50 +917,49 @@ if __name__ == '__main__':
         help='''Enable realtime scheduling if possible.
                 (default: %(default)s)''',
     )
-    
-###------------------------NEW PARAMETERS------------------------------------------###
-
+#------------------------NEW PARAMETER----------------------------------------------
     txgroup.add_argument(
-        '-IPP', '--ipp_useg', dest='ipp_useg', type=evalfloat,default = None,
+        '-IPP', '--ipp_useg', dest='ipp_useg', type=evalfloat,default=None,
         help='''IPP in useg. (default: waveform default or 400e-6 - 60km)''',
     )
 
     txgroup.add_argument(
-        '-NTXA', '--ntxa', dest='ntxa', type=evalfloat,default = 1,
+        '-NTXA', '--ntxa', dest='ntxa', type=evalfloat,default=1,
         help='''Numero de repeticiones TXA (default: waveform default or 1.0)''',
     )
 
     txgroup.add_argument(
-        '-NTXB', '--ntxb', dest='ntxb', type=evalfloat,default = 0,
+        '-NTXB', '--ntxb', dest='ntxb', type=evalfloat,default=0,
         help='''Numero de repeticiones TXB (default: waveform default or 0.0)''',
     )
 
     txgroup.add_argument(
-        '-pDCA', '--pDCA', dest='pDCA', type=evalfloat,default = 0.000020,
+        '-pDCA', '--pDCA', dest='pDCA', type=evalfloat,default=0.000020,
         help='''Periodo  TXA (default: waveform default or 10 useg)''',
     )
 
     txgroup.add_argument(
-        '-pDCB', '--pDCB', dest='pDCB', type=evalfloat,default = 0.000005,
+        '-pDCB', '--pDCB', dest='pDCB', type=evalfloat,default=0.000005,
         help='''Periodo  TXB (default: waveform default or 10 useg)''',
     )
 
     txgroup.add_argument(
-        '-delay', '--delay', dest='delay',type=evalfloat,default = 0.0,
+        '-delay', '--delay', dest='delay',type=evalfloat,default=0.0,
         help='''Delay  TX (default: waveform default or 0 useg)''',
     )
 
     txgroup.add_argument(
-        '-file_chirp', '--file_chirp', dest='file_chirp',default = None,
+        '-file_code_A', '--file_code_A', dest='file_code_A',default=None,
         help='''Transmit code file A.''',
     )
 
     txgroup.add_argument(
-        '-file_code_B', '--file_code_B', dest='file_code_B',default = None,
+        '-file_code_B', '--file_code_B', dest='file_code_B',default=None,
         help='''Transmit code file B.''',
     )
 
-###--------------------------------------------------------------------------------###
+#---------------------------------------------------------------------------------------------
+
 
     timegroup = parser.add_argument_group(title='time')
     timegroup.add_argument(
@@ -1018,10 +986,8 @@ if __name__ == '__main__':
     )
 
     op = parser.parse_args()
-
-###--------------------------------------------------------------------------------###
-    
-    if not op.tone and op.file_chirp is None and op.ipp_useg is None:
+#-------------------------------- change---------------------------
+    if not op.tone and op.file is None and op.ipp_useg is None:
         raise ValueError('Must specify a waveform file or use "--tone".')
 
     # remove redundant arguments in dev_args, stream_args, tune_args
@@ -1091,28 +1057,56 @@ if __name__ == '__main__':
     tx.run(**runopts)
 
 
-######################################################################
-########################### OJO IMPORTANTE ###########################
-######################################################################
+#python2.7 thor.py -m 192.168.20.2 -d "A:A"   -y "RX" -r 1e6 -f 70000000  --clock_source 'external' --time_source 'external' --clock_rate 100e6 --dc_offset True  --iq_balance  True
+#python tx.py  -d "A:AB" -y "TX/RX" -f 70e6 -r 1e6    code-60km-DC2-wrv2.bin
 
-# SI PARA GENERAR EL CODIGO USAMOS 10 Mhz en el comando siguiente utilizar tambien el parametro -r (sample rate) 
-# igual es decir 10 Mhz para que salga equivalente.
+####prueba con el tx
+#### python tx.py  -m 192.168.10.3 -d "A:AB" -y "TX/RX" -f 56250000 -r 10000000  code-60km-DC-100.0-r-10Mhz-wrv3.bin
+#final
+#### python tx.py  -m 192.168.10.3 -d "A:AB" -y "TX/RX" -f 62500000 -r 10000000  code-60km-DC-100.0-r-10Mhz-wrv3.bin
 
-###---Examples---###
 
-#python3 tx_2_copia.py -m 192.168.20.7 -d "A:AB" -y "TX/RX" -f 70312500 -r 2000000 -IPP 0.000400 -NTXA 4 -pDCA 0.0000064  -file_chirp /home/soporte/Escritorio/Examples/file_code/A-COMPLEMENTARY_CODE_4.txt
-#python3 tx_2_copia.py -m 192.168.20.7 -d "A:AB" -y "TX/RX" -r 1000000 -IPP 0.000400 -pDCA 0.0000064
-##python3 tx_2_copia.py -m 192.168.20.7 -d "A:AB" -y "TX/RX" -f 800000 -r 10000000 -IPP 0.0004 -pDCA 15 -NTXA 1500000 -NTXB 10000000
-##python3 tx_2_copia.py -m 192.168.20.2 -d "A:AB" -y "TX/RX" -f 0 -r 20000000 -IPP 0.0004 -pDCA 15 -NTXA 1000000 -NTXB 20000000
+#######################################LAST UPDATE########################################333
 
-#Ejemplo Final: Generación de señal a partir de archivo .bin
-#python3 tx.py -m 192.168.20.7 -d "A:AB" -y "TX/RX" -f 70132500 -r 20000000 -file_chirp /home/soporte/Descargas/file_create/test/fc=0/test_10M/chirp_amp_1_ipp_0.0004_dc_15_sr_10000000_fc_0_bw_2000000.bin
+# Si se usa la nueva version de wr_waveform.py tener en cuenta # QUESTION:https://www.google.com/search?channel=fs&client=ubuntu&q=so2
+# python wr_waveform.py  -ipp 60 -r 10 -d 5
+#ipp  en Km
+#r    en MHz
+#d     duty cicle 5, seria 5%
+# formato code-60km-DC-5.0-r-10Mhz-wrv0.bin
+#################################################################
+########################### OJO IMPORTANTE########################
+####################################################################
 
-#Example Final 2 XD: Generación de señal a partir de archivo .json (UTILZAR)
+# SI PARA GENERAR EL CODIGO USAMOS 10 Mhz en el comando siguiente utilizar tambien el parametro -r (sample rate) igual es
+# decir 10 Mhz para que salga equivalente.
 
-#Example Final 3 :D No terminado :(
-#Generación con Sample Rate de RX
-#python3 tx.py -m 192.168.20.7 -d "A:AB" -y "TX/RX" -f 0 -r 20000000 -file_chirp /code/chirp_ipp_0.0004_dc_15.0_sr_tx_20000000.0_sr_rx_2500000.0_fc_1000000.0_bw_1000000.0_amp_1.0.json
+#$ python tx.py  -m 192.168.10.3 -d "A:AB" -y "TX/RX" -f 70312500 -r 10000000  code-60km-DC-5.0-r-10Mhz-wrv0.bin
+# sudo sysctl -w net.core.wmem_max=10000000
+# sudo sysctl -w net.core.rmem_max=50000000
+
+#https://kb.ettus.com/USRP_Host_Performance_Tuning_Tips_and_Tricks
+#sudo update-alternatives --config python
+#python tx.py  -m 192.168.10.3 -d "A:AB" -y "TX/RX" -f 70312500 -r 25000000  code-60km-DC-5.0-r-25Mhz-wrv0.bin
+
+# python3 tx.py  -m 192.168.10.3 -d "A:AB" -y "TX/RX" -f 70312500 -r 20000000  code-test-60km-DC-1.00000-r-20.00Mhz-wrv0.bin
+
+#python tx.py  -m 192.168.10.3 -d "A:AB" -y "TX/RX" -f 70312500 -r 20000000 -IPP 0.000100 -NTXA 3 -NTXB 1 -pDCA 0.00005 -pDCB 0.00001 -delay 0.0 -file_code_A cc64.bin -file_code_B cc4.bin
+#python tx.py  -m 192.168.10.3 -d "A:AB" -y "TX/RX" -f 70312500 -r 20000000 -IPP 0.000400  code-test-60km-DC-1.00000-r-20.00Mhz-wrv0.bin
+
+
+# PRUEBA DE CALIBRACION
+# python tx.py  -m 192.168.10.3 -d "A:AB" -y "TX/RX" -f 70312500 -r 20000000 -IPP 0.000400 -NTXA 1 -pDCA 0.0000001 -delay 0.0
+# calibracion con DELAY SE VERIFICO QU ES CORRECTO CON ATENUADOR DE 12 dB Y carga de 50 ohm en el osciloscopio
+# python tx.py  -m 192.168.10.3 -d "A:AB" -y "TX/RX" -f 70312500 -r 20000000 -IPP 0.000400 -NTXA 1 -pDCA 0.0000001 -delay 0.0000055 
+
+
+#LAST TEST
+#python tx.py  -m 192.168.10.3 -d "A:AB" -y "TX/RX" -f 70312500 -r 20000000 -IPP 0.000400 -NTXA 2 -pDCA 0.0000064  -file_code_A /home/user-sophy/usrp-api/file_code/A-COMPLEMENTARY_CODE_4.txt 
+#python tx.py -m 192.168.10.3 -d A:AB -y TX/RX -f 70.3125e6 -r 20.0e6 -IPP 400.0e-6 -delay 5.0e-6 -G 1.3 -NTXA 122 -pDCA 1.6e-6 -NTXB 128 -pDCB 6.4e-6 -file_code_A file_code/A-COMPLEMENTARY_CODE_4.txt -file_code_B file_code/B-COMPLEMENTARY_CODE_16.txt
 
 # Usado ahora
-# python3 txNew.py -m 192.168.20.7 -d "A:AB" -y "TX/RX" -f 70132500 -r 20000000 -file_chirp /home/idi/anaconda3/envs/sophy3.10/code/json/chirp_ipp_0.0004_dc_15.0_sr_20000000.0_fc_2000000.0_bw_4000000.0_amp_1.0.json
+# python3 Tx.py -m 192.168.20.7 -d "A:AB" -y "TX/RX" -f 70312500 -r 20000000 -IPP 0.000400 -NTXA 1 -pDCA 0.00006  -file_code_A /home/idi/anaconda3/envs/sophy3.10/code/codeB/file_code/A-COMPLEMENTARY_CODE_4.txt
+# python3 Tx.py -m 192.168.20.7 -d "A:AB" -y "TX/RX" -f 70312500 -r 20000000 -IPP 0.000400 -NTXA 128 -pDCA 0.0000064  -file_code_A /home/idi/anaconda3/envs/sophy3.10/code/codeB/file_code/A-COMPLEMENTARY_CODE_16.txt
+# python3 Tx.py -m 192.168.20.7 -d "A:AB" -y "TX/RX" -f 70312500 -r 20000000 -IPP 0.000400 -NTXA 200 -pDCA 0.0000128  -file_code_A /home/idi/anaconda3/envs/sophy3.10/code/codeB/file_code/A-COMPLEMENTARY_CODE_32.txt
+

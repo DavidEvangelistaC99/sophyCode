@@ -62,39 +62,39 @@ class tx_file(gr.top_block, Qt.QWidget):
         # Variables
         ##################################################
         self.samp_rate = samp_rate = 20000000
-        self.f_central = f_central = 0
-        self.bw = bw = 4000000
+        self.f_central = f_central = 5000000
+        self.bw = bw = 10000000
         self.amp = amp = 1
         self.IPP = IPP = 0.0004
         self.DC = DC = 15
         self.numSamples = numSamples = len(chirp_usrp(amp,IPP,DC,samp_rate,f_central,bw))
         self.chirp_param = chirp_param = 'chirp_amp_' + str(amp) + '_ipp_' + str(IPP) + '_dc_' + str(DC) + '_sr_' + str(samp_rate) + '_fc_' + str(f_central) + '_bw_' + str(bw)
         self.numSamples_Chirp = numSamples_Chirp = 15*numSamples/100
-        self.chirp_file = chirp_file = '/home/idi/anaconda3/envs/sophy3.10/code/bin/' + chirp_param + '.bin'
+        self.chirp_file = chirp_file = '/home/idi/anaconda3/envs/sophy3.10/code/bin/gnuradio/' + chirp_param + '.bin'
 
         ##################################################
         # Blocks
         ##################################################
 
-        self.qtgui_time_sink_x_0 = qtgui.time_sink_c(
+        self.qtgui_time_sink_x_0_0_1 = qtgui.time_sink_c(
             numSamples, #size
             samp_rate, #samp_rate
             "", #name
             1, #number of inputs
             None # parent
         )
-        self.qtgui_time_sink_x_0.set_update_time(0.10)
-        self.qtgui_time_sink_x_0.set_y_axis(-1, 1)
+        self.qtgui_time_sink_x_0_0_1.set_update_time(0.10)
+        self.qtgui_time_sink_x_0_0_1.set_y_axis(-1, 1)
 
-        self.qtgui_time_sink_x_0.set_y_label('Amplitude', "")
+        self.qtgui_time_sink_x_0_0_1.set_y_label('Amplitude', "")
 
-        self.qtgui_time_sink_x_0.enable_tags(True)
-        self.qtgui_time_sink_x_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, 0, "")
-        self.qtgui_time_sink_x_0.enable_autoscale(False)
-        self.qtgui_time_sink_x_0.enable_grid(False)
-        self.qtgui_time_sink_x_0.enable_axis_labels(True)
-        self.qtgui_time_sink_x_0.enable_control_panel(False)
-        self.qtgui_time_sink_x_0.enable_stem_plot(False)
+        self.qtgui_time_sink_x_0_0_1.enable_tags(True)
+        self.qtgui_time_sink_x_0_0_1.set_trigger_mode(qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, 0, "")
+        self.qtgui_time_sink_x_0_0_1.enable_autoscale(False)
+        self.qtgui_time_sink_x_0_0_1.enable_grid(False)
+        self.qtgui_time_sink_x_0_0_1.enable_axis_labels(True)
+        self.qtgui_time_sink_x_0_0_1.enable_control_panel(False)
+        self.qtgui_time_sink_x_0_0_1.enable_stem_plot(False)
 
 
         labels = ['Signal 1', 'Signal 2', 'Signal 3', 'Signal 4', 'Signal 5',
@@ -114,19 +114,19 @@ class tx_file(gr.top_block, Qt.QWidget):
         for i in range(2):
             if len(labels[i]) == 0:
                 if (i % 2 == 0):
-                    self.qtgui_time_sink_x_0.set_line_label(i, "Re{{Data {0}}}".format(i/2))
+                    self.qtgui_time_sink_x_0_0_1.set_line_label(i, "Re{{Data {0}}}".format(i/2))
                 else:
-                    self.qtgui_time_sink_x_0.set_line_label(i, "Im{{Data {0}}}".format(i/2))
+                    self.qtgui_time_sink_x_0_0_1.set_line_label(i, "Im{{Data {0}}}".format(i/2))
             else:
-                self.qtgui_time_sink_x_0.set_line_label(i, labels[i])
-            self.qtgui_time_sink_x_0.set_line_width(i, widths[i])
-            self.qtgui_time_sink_x_0.set_line_color(i, colors[i])
-            self.qtgui_time_sink_x_0.set_line_style(i, styles[i])
-            self.qtgui_time_sink_x_0.set_line_marker(i, markers[i])
-            self.qtgui_time_sink_x_0.set_line_alpha(i, alphas[i])
+                self.qtgui_time_sink_x_0_0_1.set_line_label(i, labels[i])
+            self.qtgui_time_sink_x_0_0_1.set_line_width(i, widths[i])
+            self.qtgui_time_sink_x_0_0_1.set_line_color(i, colors[i])
+            self.qtgui_time_sink_x_0_0_1.set_line_style(i, styles[i])
+            self.qtgui_time_sink_x_0_0_1.set_line_marker(i, markers[i])
+            self.qtgui_time_sink_x_0_0_1.set_line_alpha(i, alphas[i])
 
-        self._qtgui_time_sink_x_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0.qwidget(), Qt.QWidget)
-        self.top_layout.addWidget(self._qtgui_time_sink_x_0_win)
+        self._qtgui_time_sink_x_0_0_1_win = sip.wrapinstance(self.qtgui_time_sink_x_0_0_1.qwidget(), Qt.QWidget)
+        self.top_layout.addWidget(self._qtgui_time_sink_x_0_0_1_win)
         self.blocks_vector_to_stream_0 = blocks.vector_to_stream(gr.sizeof_gr_complex*1, numSamples)
         self.blocks_vector_source_x_0 = blocks.vector_source_c(chirp_usrp(amp,IPP,DC,samp_rate,f_central,bw), False, numSamples, [])
         self.blocks_skiphead_1 = blocks.skiphead(gr.sizeof_gr_complex*1, 0)
@@ -142,7 +142,7 @@ class tx_file(gr.top_block, Qt.QWidget):
         self.connect((self.blocks_skiphead_1, 0), (self.blocks_head_1, 0))
         self.connect((self.blocks_vector_source_x_0, 0), (self.blocks_vector_to_stream_0, 0))
         self.connect((self.blocks_vector_to_stream_0, 0), (self.blocks_skiphead_1, 0))
-        self.connect((self.blocks_vector_to_stream_0, 0), (self.qtgui_time_sink_x_0, 0))
+        self.connect((self.blocks_vector_to_stream_0, 0), (self.qtgui_time_sink_x_0_0_1, 0))
 
 
     def closeEvent(self, event):
@@ -161,7 +161,7 @@ class tx_file(gr.top_block, Qt.QWidget):
         self.set_chirp_param('chirp_amp_' + str(self.amp) + '_ipp_' + str(self.IPP) + '_dc_' + str(self.DC) + '_sr_' + str(self.samp_rate) + '_fc_' + str(self.f_central) + '_bw_' + str(self.bw))
         self.set_numSamples(len(chirp_usrp(self.amp,self.IPP,self.DC,self.samp_rate,self.f_central,self.bw)))
         self.blocks_vector_source_x_0.set_data(chirp_usrp(self.amp,self.IPP,self.DC,self.samp_rate,self.f_central,self.bw), [])
-        self.qtgui_time_sink_x_0.set_samp_rate(self.samp_rate)
+        self.qtgui_time_sink_x_0_0_1.set_samp_rate(self.samp_rate)
 
     def get_f_central(self):
         return self.f_central
@@ -221,7 +221,7 @@ class tx_file(gr.top_block, Qt.QWidget):
 
     def set_chirp_param(self, chirp_param):
         self.chirp_param = chirp_param
-        self.set_chirp_file('/home/idi/anaconda3/envs/sophy3.10/code/bin/' + self.chirp_param + '.bin')
+        self.set_chirp_file('/home/idi/anaconda3/envs/sophy3.10/code/bin/gnuradio/' + self.chirp_param + '.bin')
 
     def get_numSamples_Chirp(self):
         return self.numSamples_Chirp
