@@ -3,7 +3,7 @@
 
 ## Descripción
 
-En este repositorio se encuentran los scripts que se fueron avanzando para la generación de la señal *Chirp*. Resultado de una combinación de *ChatGPT*, tutoriales hindúes y un poco de suerte se quiere lograr la mejora de la sensibilidad y resolución del radar *SOPHy* a partir de estos scripts insanos :smiling_imp:
+En este repositorio se encuentran los scripts que se fueron avanzando para la generación de la señal *Chirp*. Se busca la mejora de la sensibilidad y resolución del radar *SOPHy*.
 
 ## Referencias
 
