@@ -6,7 +6,7 @@ All results were generated using the **Signal Chain library** from the ROJ repos
 
 It includes:
 
-- Plan Position Indicator (PPI) plots
-- Doppler spectrum plots
-- Animated visualizations (GIFs) of radar reflectivity and radial velocity PPI
+- `ppi/`: Plan Position Indicator (PPI) plots
+- `doppler_spectrum/`: Doppler spectrum plots
+- `gifs/`: Animated visualizations (GIFs) of radar reflectivity and radial velocity PPI
 
