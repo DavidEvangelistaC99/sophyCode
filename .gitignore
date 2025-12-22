@@ -1,0 +1,11 @@
+# Python
+__pycache__/
+*.pyc
+
+# MATLAB
+*.asv
+
+# Compilados
+*.o
+*.out
+*.exe
