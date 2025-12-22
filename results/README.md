@@ -8,5 +8,5 @@ It includes:
 
 - Plan Position Indicator (PPI) plots
 - Doppler spectrum plots
-- Animated visualizations (GIFs) of radar reflectivity and radial velocity PPI and Signal Processing Results
+- Animated visualizations (GIFs) of radar reflectivity and radial velocity PPI
 
