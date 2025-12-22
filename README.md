@@ -9,3 +9,36 @@ En este repositorio se encuentran los scripts que se fueron avanzando para la ge
 
 1. https://github.com/sebastianVP/GNURADIO_CHIRP 
 2. https://github.com/MITHaystack/digital_rf
+
+# Pulse Compression of Chirp Signals for Weather Radar
+
+## Overview
+This repository contains signal processing algorithms developed during my
+undergraduate thesis at the Radio Observatory of Jicamarca (ROJ), focused on
+chirp-based pulse compression to improve SNR in meteorological radar systems.
+
+## Scientific Context
+Pulse compression is essential in modern solid-state weather radars to achieve
+high sensitivity without sacrificing range resolution.
+
+## Methods
+- Linear FM (chirp) waveform generation
+- Matched filtering
+- Doppler spectrum analysis
+- SNR estimation over azimuth angles
+
+## Results
+- ~13 dB average SNR improvement compared to complementary codes
+- Validated using real radar data from weather radar SOPHy 
+
+## Repository Structure
+- `legacy/`: early exploratory codes
+- `signal_processing/`: core algorithms
+- `radar/`: radar-specific simulations and analysis
+
+## Requirements
+Python 3.10+, NumPy, SciPy, Matplotlib
+
+## Author
+David Fernando Evangelista Cuti  
+B.Sc. Electronic Engineering – UNI, Peru
