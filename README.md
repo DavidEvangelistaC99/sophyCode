@@ -35,7 +35,7 @@ high sensitivity without sacrificing range resolution.
 - `legacy/`: early exploratory codes
 - `signal_processing/`: core algorithms
 - `radar/`: radar-specific simulations and analysis
-- `schain/`: signal processing library developed by the Radio Observatory of Jicamarca (ROJ). This folder contains the original library code and documentation by ROJ.
+- `schain/`: signal processing library developed by the Radio Observatory of Jicamarca (ROJ).
 
 ## Requirements
 Python 3.10+, NumPy, SciPy, Matplotlib
