@@ -13,7 +13,6 @@ desc = "USRP_test"
 filename = "USRP_processing.xml"
 
 path = '/home/david/Documents/DATA/CHIRP@2025-10-07T19-57-06/rawdata/'
-#'/DATA_RM/DATA/CHIRP@2025-10-09T16-29-01/rawdata/'
 figpath = '/home/david/Documents/DATA/CHIRP@2025-10-07T19-57-06/rawdata'
 
 ## REVISION ##
