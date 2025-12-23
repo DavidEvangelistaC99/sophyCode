@@ -1,46 +1,79 @@
-![](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj1rei20Yq1QULcdF6_aFv3heVCIHSX3g9W0pR71ZyLcfKOK4mdv2vHo-o2CrznyekA2ireoj22rMkQACvKLio_Z13SyShnP4JRxrkNPwUpYWNUPtnEmS18knp__HwLOFb_NmSo7QUNABkl4vjbXE5GMS7FzNNJy0xXIna5zC6EcPNPdNxQyd74Bw8rtQ/s1880/RTSpecAn_Fig1.PNG)
-
-
-## Descripción
-
-En este repositorio se encuentran los scripts que se fueron avanzando para la generación de la señal *Chirp*. Se busca la mejora de la sensibilidad y resolución del radar *SOPHy*.
-
-## Referencias
-
-1. https://github.com/sebastianVP/GNURADIO_CHIRP 
-2. https://github.com/MITHaystack/digital_rf
-3. https://www.igp.gob.pe/observatorios/radio-observatorio-jicamarca/realtime/plot/400/reflectivity/
-
 # Pulse Compression of Chirp Signals for Weather Radar
 
+<p align="center">
+  <img src="images/sophy.jpg" width="900">
+</p>
+
+<p align="center">
+  <em>SOPHy weather radar at the Radio Observatory of Jicamarca (ROJ).</em>
+</p>
+
 ## Overview
-This repository contains signal processing algorithms developed during my
-undergraduate thesis at the Radio Observatory of Jicamarca (ROJ), focused on
-chirp-based pulse compression to improve SNR in meteorological radar systems.
+This repository contains waveform generation, data acquisition, and signal
+processing algorithms developed during my undergraduate thesis at the
+**Radio Observatory of Jicamarca (ROJ)**. The work focuses on **chirp-based
+pulse compression** techniques to improve signal-to-noise ratio (SNR) in
+meteorological radar systems.
+
+The implemented framework integrates **USRP-based transmission and reception**
+(adapted from MIT Haystack’s DigitalRF tools) with post-processing algorithms
+based on the **ROJ Signal Chain library**, and is validated using real radar
+data from the SOPHy weather radar.
 
 ## Scientific Context
-Pulse compression is essential in modern solid-state weather radars to achieve
-high sensitivity without sacrificing range resolution.
+Pulse compression is a key technique in modern solid-state weather radars,
+allowing high sensitivity without sacrificing range resolution. Linear FM
+(chirp) waveforms are particularly attractive due to their robustness and
+processing gain when combined with matched filtering and Doppler processing.
 
 ## Methods
 - Linear FM (chirp) waveform generation
-- Matched filtering
+- USRP-based transmission and reception
+- Matched filtering and pulse compression
 - Doppler spectrum analysis
 - SNR estimation over azimuth angles
+- Pulse Pair processing for radar moment estimation
 
 ## Results
-- ~13 dB average SNR improvement compared to complementary codes
-- Validated using real radar data from weather radar SOPHy 
+- Approximately **13 dB average SNR improvement** compared to complementary codes
+- Validation using **real data from the SOPHy weather radar**
+- Generation of PPI products including reflectivity, radial velocity,
+  spectral width, and polarimetric variables
 
 ## Repository Structure
-- `legacy/`: early exploratory codes
-- `signal_processing/`: core algorithms
-- `radar/`: radar-specific simulations and analysis
-- `schain/`: signal processing library developed by the Radio Observatory of Jicamarca (ROJ).
+- `tx/`: Waveform generation and transmission scripts using a USRP platform  
+  (adapted from MIT Haystack DigitalRF; includes chirp waveform generation)
+- `rx/`: USRP-based data acquisition scripts adapted from DigitalRF, storing
+  received data in HDF5 format
+- `processing/`: Signal processing scripts based on the ROJ Signal Chain library,
+  including Doppler spectrum estimation and PPI generation using Pulse Pair
+- `results/`: PPI plots, Doppler spectra, and animated radar products
+- `schain/`: Signal processing library developed by the Radio Observatory of
+  Jicamarca (ROJ)
+- `legacy/`: Early exploratory scripts and development drafts
+- `test/`: Scripts and auxiliary files used during thesis data acquisition
 
 ## Requirements
-Python 3.10+, NumPy, SciPy, Matplotlib
+- Python 3.10+
+- NumPy
+- SciPy
+- Matplotlib
+- digital_rf
+- ROJ Signal Chain library (`schain`)
+
+## References
+1. Sebastián V. P., *GNURADIO_CHIRP*: Open-source implementation of chirp-based
+   radar waveforms and pulse compression techniques.  
+   https://github.com/sebastianVP/GNURADIO_CHIRP
+
+2. MIT Haystack Observatory, *DigitalRF*: A flexible framework for RF signal
+   recording and playback widely used in radar and radio science applications.  
+   https://github.com/MITHaystack/digital_rf
+
+3. Radio Observatory of Jicamarca (ROJ), *Real-time weather radar products*.  
+   https://www.igp.gob.pe/observatorios/radio-observatorio-jicamarca/realtime/plot/400/reflectivity/
 
 ## Author
-David Fernando Evangelista Cuti  
-B.Sc. Electronic Engineering – UNI, Peru
+**David Fernando Evangelista Cuti**  
+B.Sc. Electronic Engineering – National University of Engineering (UNI), Peru
+
