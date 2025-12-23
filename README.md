@@ -9,6 +9,7 @@ En este repositorio se encuentran los scripts que se fueron avanzando para la ge
 
 1. https://github.com/sebastianVP/GNURADIO_CHIRP 
 2. https://github.com/MITHaystack/digital_rf
+3. https://www.igp.gob.pe/observatorios/radio-observatorio-jicamarca/realtime/plot/400/reflectivity/
 
 # Pulse Compression of Chirp Signals for Weather Radar
 
