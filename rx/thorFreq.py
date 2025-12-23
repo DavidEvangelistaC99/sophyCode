@@ -1892,4 +1892,4 @@ if __name__ == "__main__":
 # python3 thorNew.py -m 192.168.10.5 -d "A:AB" -c ch0 -y "RX" -f 70312500 -r 5000000 /home/idi/data_freq/sin
 
 # Versión para el ejemplo del uso de SIRM
-# python3 thorNew.py -m 192.168.10.5 -d "A:AB" -c ch0 -y "RX" -f 70.3125e6 -r 2.5e6 --clock_source external --time_source external --clock_rate 100.0e6 --dc_offset True,True --iq_balance True,True /home/idi/data_freq/pruebas/fc_0/blackman
+# python3 thorFreq.py -m 192.168.10.5 -d "A:AB" -c ch0 -y "RX" -f 70.3125e6 -r 2.5e6 --clock_source external --time_source external --clock_rate 100.0e6 --dc_offset True,True --iq_balance True,True /home/idi/data_freq/pruebas/fc_0/blackman

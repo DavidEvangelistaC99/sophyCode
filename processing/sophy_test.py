@@ -1,6 +1,6 @@
 # TEST_BOLITA_COBRE_4
 
-import modFreqNewLast as modf
+import modFreq as modf
 
 import os, sys
 import datetime

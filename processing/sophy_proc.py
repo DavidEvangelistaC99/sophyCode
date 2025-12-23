@@ -1,5 +1,5 @@
 # SOPHY PROC script
-import modFreqNewLast as modf
+import modFreq as modf
 
 import os, sys, json, argparse
 import multiprocessing
