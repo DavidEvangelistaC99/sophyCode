@@ -1,4 +1,4 @@
-## Transmission (TX) Scripts
+## Transmission Scripts
 
 This folder contains the transmission-related scripts used in the SOPHy radar
 experiments. These scripts are responsible for waveform generation and
