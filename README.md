@@ -11,13 +11,13 @@
 ## Overview
 This repository contains waveform generation, data acquisition, and signal
 processing algorithms developed during my undergraduate thesis at the
-**Radio Observatory of Jicamarca (ROJ)**. The work focuses on **chirp-based
-pulse compression** techniques to improve signal-to-noise ratio in
+Radio Observatory of Jicamarca (ROJ). The work focuses on chirp-based
+pulse compression techniques to improve signal-to-noise ratio in
 meteorological radar systems.
 
-The implemented framework integrates **USRP-based transmission and reception**
+The implemented framework integrates USRP-based transmission and reception
 (adapted from MIT Haystack’s DigitalRF tools) with post-processing algorithms
-based on the **ROJ Signal Chain library**, and is validated using real radar
+based on the ROJ Signal Chain library, and is validated using real radar
 data from the SOPHy weather radar.
 
 ## Scientific Context
@@ -27,21 +27,25 @@ allowing high sensitivity without sacrificing range resolution. Linear FM
 processing gain when combined with matched filtering and Doppler processing.
 
 ## Methods
-- Linear FM (chirp) waveform generation
+- Chirp waveform generation
 - USRP-based transmission and reception
 - Matched filtering and pulse compression
 - Doppler spectrum analysis
 - SNR estimation over azimuth angles
 - Pulse Pair processing for radar moment estimation
-- Validation using **real data from the SOPHy weather radar**
+- Validation using real data from the SOPHy weather radar
 - Generation of PPI products including reflectivity, radial velocity,
   spectral width, and polarimetric variables
 
 ## Results
-- Approximately **13.8 dB average SNR improvement** compared to complementary codes
-- Reduction of the blind range by approximately **150 m**
-- Extension of the detectable radial velocity range up to **±20 m/s**
-- Improved resolution with a **Peak SideLobe Ratio (PSLR) of −30.7 dB**, obtained from spectral analysis of the transmitted chirp waveform, providing an upper-bound estimate of pulse compression performance
+The results presented in this section correspond to a comparative evaluation
+between the proposed chirp-based pulse compression scheme and the previously
+used complementary code waveforms.
+
+- Approximately 13.8 dB average SNR improvement
+- Reduction of the blind range by approximately 150 m
+- Extension of the detectable radial velocity range up to ±20 m/s
+- Improved resolution with a PSLR of −30.7 dB, obtained from spectral analysis of the transmitted chirp waveform, providing an upper-bound estimate of pulse compression performance
 
 ## Repository Structure
 - `tx/`: Waveform generation and transmission scripts using a USRP platform  
@@ -51,8 +55,7 @@ processing gain when combined with matched filtering and Doppler processing.
 - `processing/`: Signal processing scripts based on the ROJ Signal Chain library,
   including Doppler spectrum estimation and PPI generation using Pulse Pair
 - `results/`: PPI plots, Doppler spectra, and animated radar products
-- `schain/`: Signal processing library developed by the Radio Observatory of
-  Jicamarca (ROJ)
+- `schain/`: Signal processing library developed by the ROJ
 - `legacy/`: Early exploratory scripts and development drafts
 - `test/`: Scripts and auxiliary files used during thesis data acquisition
 
@@ -62,7 +65,7 @@ processing gain when combined with matched filtering and Doppler processing.
 - SciPy
 - Matplotlib
 - Digital RF software framework (`digital_rf`) – MIT Haystack Observatory
-- Signal Chain processing library (`schain`) – Radio Observatory of Jicamarca
+- Signal Chain processing library (`schain`) – ROJ
 
 ## Key Resources and Links
 
@@ -70,19 +73,16 @@ processing gain when combined with matched filtering and Doppler processing.
    Flexible software framework for RF signal recording, storage, and playback,
    widely used in radar and radio science applications.  
    https://github.com/MITHaystack/digital_rf
-2. **Radio Observatory of Jicamarca – Signal Chain Library (`schain`)**  
+2. **ROJ – Signal Chain Library (`schain`)**  
    Radar signal processing library used for Doppler spectrum estimation, PPI
    generation, and polarimetric variable computation.  
    https://intranet.igp.gob.pe/jicamarca/rhodecode/schain/commits?branch=v3.0-WR
-3. **Radio Observatory of Jicamarca – Real-Time Weather Radar Products**  
+3. **Real-Time Weather Radar Products**  
    Public real-time visualization of reflectivity and Doppler products from the
    SOPHy weather radar system.  
    https://www.igp.gob.pe/observatorios/radio-observatorio-jicamarca/realtime/plot/400/reflectivity/
 4. **GNURADIO_CHIRP – Chirp waveform generation and experiments**  
-   Scripts developed during the internship program
-   of the Geophysical Institute of Peru (IGP) at the Radio Observatory of
-   Jicamarca (ROJ), with the contribution of **David Evangelista**, undergraduate
-   student in Electronic Engineering (2024).
+   Scripts developed by David Evangelista during his internship at ROJ in 2024.
    https://github.com/sebastianVP/GNURADIO_CHIRP
 
 ## Author
